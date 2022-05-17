@@ -1,11 +1,11 @@
 (() => {
-	const ff='font-family';
-	const fff='Noto Sans CJK JP';
-	const fffi='important';
-	const itgn=['I', 'PRE', 'CODE'];
-  let lock=false;
-	let makeThrottle=new Date().valueOf();
-  let throttleTime=1000;
+  const ff = 'font-family';
+  const fff = 'Noto Sans CJK JP';
+  const fffi = 'important';
+  const itgn = ['I', 'PRE', 'CODE'];
+  let lock = false;
+  let makeThrottle = new Date().valueOf();
+  let throttleTime = 1000;
   let make = () => {
 
     if (lock) return;
@@ -18,7 +18,7 @@
     for (let i = 0; i < a.length; i++) {
 
       if (itgn.includes(a[i].tagName))
-      	continue;
+        continue;
 
       if (a[i].className) {
         if (typeof a[i].className === 'string') {
@@ -58,14 +58,19 @@
 
 
   let observer = new MutationObserver(mutations => {
-  	if (new Date().valueOf() > makeThrottle + throttleTime) {
+    if (new Date().valueOf() > makeThrottle + throttleTime) {
       make();
-  		makeThrottle = new Date().valueOf();
-      throttleTime+=1000;
-  	}
-	});
+      makeThrottle = new Date().valueOf();
+      throttleTime += 1000;
+    }
+  });
 
-	observer.observe(document, {attributes: false, childList: true, characterData: false, subtree:true});
+  observer.observe(document, {
+    attributes: false,
+    childList: true,
+    characterData: false,
+    subtree: true
+  });
 
-	make();
+  make();
 })();
