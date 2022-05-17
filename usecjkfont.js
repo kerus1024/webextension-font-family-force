@@ -2,8 +2,8 @@
   const ff = 'font-family';
   const fff = 'Noto Sans CJK JP';
   const fffi = 'important';
-  const ignoreTag = ['I', 'PRE', 'CODE'];
-  const ignoreClassName = ['icon', 'blob'];
+  const ignoreTag = ['i', 'pre', 'code'];
+  const ignoreClassName = ['icon', 'blob','code'];
   let lock = false;
   let makeThrottle = new Date().valueOf();
   let throttleTime = 1000;
@@ -20,12 +20,12 @@
 
       let stop = false;
 
-      if (ignoreTag.includes(a[i].tagName))
+      if (ignoreTag.includes(a[i].tagName.toLowerCase()))
         continue;
 
       if (a[i].className && typeof a[i].className === 'string') {
         ignoreClassName.forEach(ve => {
-          if (a[i].className.indexOf(ve) !== -1) {
+          if (a[i].className.toLowerCase().indexOf(ve) !== -1) {
             stop = true;
           }
         });
@@ -38,13 +38,13 @@
       do {
 
         if (!pElem) break;
-        if (ignoreTag.includes(pElem.tagName)) {
+        if (ignoreTag.includes(pElem.tagName.toLowerCase())) {
           stop = true;
         }
 
         if (pElem.className && typeof pElem.className === 'string') {
           ignoreClassName.forEach(ve => {
-            if (pElem.className.indexOf(ve) !== -1) {
+            if (pElem.className.toLowerCase().indexOf(ve) !== -1) {
               stop = true;
             }
           });
