@@ -40,7 +40,6 @@
         if (!pElem) break;
         if (ignoreTag.includes(pElem.tagName)) {
           stop = true;
-          break;
         }
 
         if (pElem.className && typeof pElem.className === 'string') {
