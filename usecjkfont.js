@@ -2,7 +2,8 @@
   const ff = 'font-family';
   const fff = 'Noto Sans CJK JP';
   const fffi = 'important';
-  const itgn = ['I', 'PRE', 'CODE'];
+  const ignoreTag = ['I', 'PRE', 'CODE'];
+  const ignoreClassName = ['icon', 'blob'];
   let lock = false;
   let makeThrottle = new Date().valueOf();
   let throttleTime = 1000;
@@ -17,29 +18,42 @@
 
     for (let i = 0; i < a.length; i++) {
 
-      if (itgn.includes(a[i].tagName))
+      let stop = false;
+
+      if (ignoreTag.includes(a[i].tagName))
         continue;
 
-      if (a[i].className) {
-        if (typeof a[i].className === 'string') {
-          if (a[i].className.indexOf('icon') !== -1) {
-            continue;
+      if (a[i].className && typeof a[i].className === 'string') {
+        ignoreClassName.forEach(ve => {
+          if (a[i].className.indexOf(ve) !== -1) {
+            stop = true;
           }
-        }
+        });
       }
 
-      let stop = false;
+      
       let preventLag = 0;
       let pElem = a[i].parentElement;
+
       do {
+
         if (!pElem) break;
-        if (itgn.includes(pElem.tagName)) {
+        if (ignoreTag.includes(pElem.tagName)) {
           stop = true;
           break;
         }
+
+        if (pElem.className && typeof pElem.className === 'string') {
+          ignoreClassName.forEach(ve => {
+            if (pElem.className.indexOf(ve) !== -1) {
+              stop = true;
+            }
+          });
+        }
+
         preventLag++;
         pElem = pElem.parentElement
-      } while (preventLag < 20000 || pElem);
+      } while (!stop && preventLag < 20000 || pElem);
 
       if (stop) continue;
 
