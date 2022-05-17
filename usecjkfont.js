@@ -2,8 +2,8 @@
   const ff = 'font-family';
   const fff = 'Noto Sans CJK JP';
   const fffi = 'important';
-  const ignoreTag = ['i', 'pre', 'code'];
-  const ignoreClassName = ['icon', 'blob','code'];
+  const ignoreTag = ['i', 'pre', 'code', 'textarea', 'input'];
+  const ignoreClassName = ['icon', 'blob','code', 'enlighter', 'prettyprint', 'microlight', 'comment', 'property', 'hljs', 'textarea'];
   let lock = false;
   let makeThrottle = new Date().valueOf();
   let throttleTime = 1000;
