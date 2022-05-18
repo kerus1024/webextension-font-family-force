@@ -1,12 +1,20 @@
 (() => {
+
+
   const ff = 'font-family';
   const fff = 'Noto Sans CJK JP';
   const fffi = 'important';
   const ignoreTag = ['i', 'pre', 'code', 'textarea', 'input'];
   const ignoreClassName = ['icon', 'blob','code', 'enlighter', 'prettyprint', 'microlight', 'comment', 'property', 'hljs', 'textarea'];
+  const startTime = new Date().valueOf();
+  const startBurstTime = 10000;
+  const aliveTime = 60000;
   let lock = false;
   let makeThrottle = new Date().valueOf();
   let throttleTime = 1000;
+  let maxSeek = 0;
+  let limitSeek = 20000;
+
   let make = () => {
 
     if (lock) return;
@@ -14,55 +22,52 @@
     lock = true;
 
     let affect = 0;
-    let a = document.querySelectorAll('*');
+    let seeked = 0;
 
-    for (let i = 0; i < a.length; i++) {
+    const seek = (htmlNodes) => {
 
-      let stop = false;
+      if (htmlNodes.childNodes) {
+        for (let i = 0; i < htmlNodes.childNodes.length; i++) {
 
-      if (ignoreTag.includes(a[i].tagName.toLowerCase()))
-        continue;
+          const elem = htmlNodes.childNodes[i];
 
-      if (a[i].className && typeof a[i].className === 'string') {
-        ignoreClassName.forEach(ve => {
-          if (a[i].className.toLowerCase().indexOf(ve) !== -1) {
-            stop = true;
-          }
-        });
-      }
+          if (elem.nodeType === 1 || elem.nodeType === 2) {
 
-      
-      let preventLag = 0;
-      let pElem = a[i].parentElement;
+            let set = true;
 
-      do {
-
-        if (!pElem) break;
-        if (ignoreTag.includes(pElem.tagName.toLowerCase())) {
-          stop = true;
-        }
-
-        if (pElem.className && typeof pElem.className === 'string') {
-          ignoreClassName.forEach(ve => {
-            if (pElem.className.toLowerCase().indexOf(ve) !== -1) {
-              stop = true;
+            if (ignoreTag.includes(elem.tagName.toLowerCase())) {
+              set = false;
             }
-          });
-        }
 
-        preventLag++;
-        pElem = pElem.parentElement
-      } while (!stop && preventLag < 20000 || pElem);
+            ignoreClassName.forEach(ev => {
+              if (typeof elem.className === 'string' && elem.className.toLowerCase().indexOf(ev) !== -1) {
+                set = false;
+              }
+            });
 
-      if (stop) continue;
+            if (set) {
+              elem.style.setProperty(ff, fff, fffi);
+              affect++;
+            }
 
-      a[i].style.setProperty(ff, fff, fffi);
-      affect++;
+            if (elem.childNodes) {
+              seek(elem);
+              seeked++;
+            }  
+          }
+        }  
+      }
 
     }
 
+    seek(document)
+
     if (typeof debug !== 'undefined') {
-      console.log('Font Affected OK . elements: ' + a.length + ', affect: ' + affect);
+      console.log('Font Affected OK . elements: ' + seeked + ', affect: ' + affect);
+    }
+
+    if (seek > maxSeek) {
+      maxSeek = seek;
     }
 
     lock = false;
@@ -71,7 +76,7 @@
 
 
   let observer = new MutationObserver(mutations => {
-    if (new Date().valueOf() > makeThrottle + throttleTime) {
+    if ((maxSeek < limitSeek && new Date().valueOf() < startTime + aliveTime && new Date().valueOf() > makeThrottle + throttleTime) || (startTime + startBurstTime > new Date().valueOf() && new Date().valueOf() > makeThrottle + throttleTime)) {
       make();
       makeThrottle = new Date().valueOf();
       throttleTime += 1000;
