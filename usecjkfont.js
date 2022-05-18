@@ -24,6 +24,9 @@
     let affect = 0;
     let seeked = 0;
 
+    document.documentElement.style.setProperty('font-family', 'Noto Sans CJK JP', 'important');
+    document.body.style.setProperty('font-family', 'Noto Sans CJK JP', 'important');
+
     const seek = (htmlNodes) => {
 
       if (htmlNodes.childNodes) {
