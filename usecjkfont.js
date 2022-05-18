@@ -4,8 +4,8 @@
   const ff = 'font-family';
   const fff = 'Noto Sans CJK JP';
   const fffi = 'important';
-  const ignoreTag = ['i', 'pre', 'code', 'textarea', 'input'];
-  const ignoreClassName = ['icon', 'blob','code', 'enlighter', 'prettyprint', 'microlight', 'comment', 'property', 'hljs', 'textarea'];
+  const ignoreTag = ['i', 'pre', 'code'];
+  const ignoreClassName = ['icon', 'blob','code', 'enlighter', 'prettyprint', 'microlight', 'comment', 'property', 'hljs', 'textarea', 'highlight'];
   const startTime = new Date().valueOf();
   const startBurstTime = 10000;
   const aliveTime = 60000;
@@ -51,11 +51,12 @@
             if (set) {
               elem.style.setProperty(ff, fff, fffi);
               affect++;
-            }
 
-            if (elem.childNodes) {
-              seek(elem);
-              seeked++;
+              if (elem.childNodes) {
+                seek(elem);
+                seeked++;
+              }
+
             }  
           }
         }  
