@@ -3,7 +3,7 @@
   "description": "Noto Sans CJK JP로 읽고싶어요",
   "manifest_version": 2,
   "name": "iwantjpfont",
-  "version": "1.14",
+  "version": "1.15",
   "homepage_url": "https://github.com/kerus1024/webextension-font-family-force",
   "icons": {
     "48": "icons/border-48.png"
@@ -11,7 +11,8 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["usecjkfont.js"]
+      "js": ["usecjkfont.js"],
+      "all_frames": true
     }
   ]
 }
