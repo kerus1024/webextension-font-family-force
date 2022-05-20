@@ -1,6 +1,5 @@
 (() => {
 
-
   const ff = 'font-family';
   const fff = 'Noto Sans CJK JP';
   const fffi = 'important';
@@ -14,6 +13,7 @@
   let throttleTime = 1000;
   let maxSeek = 0;
   let limitSeek = 20000;
+  let startlimitSeek = 100000;
 
   let make = () => {
 
@@ -24,10 +24,14 @@
     let affect = 0;
     let seeked = 0;
 
-    document.documentElement.style.setProperty('font-family', 'Noto Sans CJK JP', 'important');
-    document.body.style.setProperty('font-family', 'Noto Sans CJK JP', 'important');
+    document.documentElement.style.setProperty(ff, fff, fffi);
+    document.body.style.setProperty(ff, fff, fffi);
 
     const seek = (htmlNodes) => {
+
+      if (seeked > startlimitSeek) {
+        return console.error(`[usecjkfont] Seeked over ${seeked}. seeking is stopped`);
+      }
 
       if (htmlNodes.childNodes) {
         for (let i = 0; i < htmlNodes.childNodes.length; i++) {
@@ -64,10 +68,10 @@
 
     }
 
-    seek(document)
+    seek(document);
 
-    if (typeof debug !== 'undefined') {
-      console.log('Font Affected OK . elements: ' + seeked + ', affect: ' + affect);
+    if (typeof debug !== 'undefined' && debug) {
+      console.log(`[usecjkfont] Element Affects: ${affect}/${seeked}`);
     }
 
     if (seek > maxSeek) {
