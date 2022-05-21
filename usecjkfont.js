@@ -4,7 +4,22 @@
   let fff = 'Noto Sans CJK JP';
   const fffi = 'important';
   const ignoreTag = ['i', 'pre', 'code'];
-  const ignoreClassName = ['icon', 'blob','code', 'enlighter', 'prettyprint', 'microlight', 'comment', 'property', 'hljs', 'textarea', 'highlight', 'editor', 'vjs', 'fa'];
+  const ignoreClassName = [
+    '.*?icon.*?', 
+    '.*?blob.*?', 
+    '.*?code.*?', 
+    '.*?enlighter.*?', 
+    '.*?prettyprint.*?', 
+    '.*?microlight.*?', 
+    '.*?comment.*?', 
+    '.*?property.*?', 
+    '.*?hljs.*?', 
+    '.*?textarea.*?', 
+    '.*?highlight.*?', 
+    '.*?editor.*?', 
+    '.*?vjs.*?', 
+    'fa'
+  ];
   const startTime = new Date().valueOf();
   const startBurstTime = 10000;
   const aliveTime = 60000;
@@ -53,11 +68,24 @@
               set = false;
             }
 
-            ignoreClassName.forEach(ev => {
-              if (typeof elem.className === 'string' && elem.className.toLowerCase().indexOf(ev) !== -1) {
-                set = false;
-              }
-            });
+            if (typeof elem.className === 'string') {
+              const classNames = elem.className.toLowerCase().split(' ');
+              
+              classNames.forEach(className => {
+
+                ignoreClassName.forEach(ev => {
+
+                  const ignoreRegExp = new RegExp(`^${ev}$`);
+                  
+                  if (ignoreRegExp.test(className)) {
+                    set = false;
+                  }
+
+                });
+
+              });
+
+            }
 
             if (set) {
               elem.style.setProperty(ff, fff, fffi);
