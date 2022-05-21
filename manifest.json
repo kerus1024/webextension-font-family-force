@@ -1,9 +1,19 @@
 {
-
+  "browser_action": {
+    "default_title": "Font switcher",
+    "default_popup": "switcher.html",
+    "browser_style": true,
+    "default_icon": {
+        "128": "icons/border-48.png"
+    }
+  },
   "description": "Noto Sans CJK JP로 읽고싶어요",
   "manifest_version": 2,
   "name": "iwantjpfont",
-  "version": "1.17",
+  "permissions": [
+    "storage"
+  ],
+  "version": "1.20",
   "homepage_url": "https://github.com/kerus1024/webextension-font-family-force",
   "icons": {
     "48": "icons/border-48.png"

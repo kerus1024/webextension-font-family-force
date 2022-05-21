@@ -1,10 +1,10 @@
-(() => {
+  (async() => {
 
   const ff = 'font-family';
-  const fff = 'Noto Sans CJK JP';
+  let fff = 'Noto Sans CJK JP';
   const fffi = 'important';
   const ignoreTag = ['i', 'pre', 'code'];
-  const ignoreClassName = ['icon', 'blob','code', 'enlighter', 'prettyprint', 'microlight', 'comment', 'property', 'hljs', 'textarea', 'highlight'];
+  const ignoreClassName = ['icon', 'blob','code', 'enlighter', 'prettyprint', 'microlight', 'comment', 'property', 'hljs', 'textarea', 'highlight', 'editor', 'vjs', 'fa'];
   const startTime = new Date().valueOf();
   const startBurstTime = 10000;
   const aliveTime = 60000;
@@ -14,6 +14,13 @@
   let maxSeek = 0;
   let limitSeek = 20000;
   let startlimitSeek = 100000;
+
+  const getKey = await browser.storage.local.get('font');
+  
+  if (typeof getKey === 'object' && getKey.font) {
+    fff = getKey.font;
+  }
+
 
   let make = () => {
 
