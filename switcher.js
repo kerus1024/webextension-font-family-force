@@ -1,9 +1,19 @@
 const defaultsValue = {
   font: 'Noto Sans CJK JP',
   ignoreTag: [
+    'html',
+    'head',
+    'meta',
+    'link',
+    'script',
+    'style',
+    'img',
+    'video',
+    'audio',
+    'embed',
     'i', 
     'pre', 
-    'code'
+    'code',
   ],
   ignoreClassName: [
     '.*?icon.*?', 
@@ -21,7 +31,7 @@ const defaultsValue = {
     '.*?vjs.*?', 
     'fa'
   ]
-}
+};
 
 const savevalues = async() => {
   document.querySelector('#result').innerHTML = 'saving...';

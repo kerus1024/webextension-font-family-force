@@ -1,9 +1,19 @@
 const defaultsValue = {
   font: 'Noto Sans CJK JP',
   ignoreTag: [
+    'html',
+    'head',
+    'meta',
+    'link',
+    'script',
+    'style',
+    'img',
+    'video',
+    'audio',
+    'embed',
     'i', 
     'pre', 
-    'code'
+    'code',
   ],
   ignoreClassName: [
     '.*?icon.*?', 
@@ -41,7 +51,6 @@ const defaultsValue = {
   let startlimitSeek = 100000;
 
   const getKey = await browser.storage.local.get();
-  console.log('Loaded Key', getKey)
   
   if (typeof getKey === 'object') {
 
@@ -73,7 +82,8 @@ const defaultsValue = {
     document.body.style.setProperty(ff, fff, fffi);
 
     const seek = (htmlNodes) => {
-
+      seeked++;
+      
       if (seeked > startlimitSeek) {
         return console.error(`[usecjkfont] Seeked over ${seeked}. seeking is stopped`);
       }
@@ -83,7 +93,7 @@ const defaultsValue = {
 
           const elem = htmlNodes.childNodes[i];
 
-          if (elem.nodeType === 1 || elem.nodeType === 2) {
+          if (elem.nodeType === 1) {
 
             let set = true;
 
@@ -116,7 +126,6 @@ const defaultsValue = {
 
               if (elem.childNodes) {
                 seek(elem);
-                seeked++;
               }
 
             }  
@@ -128,9 +137,7 @@ const defaultsValue = {
 
     seek(document);
 
-    if (typeof debug !== 'undefined' && debug) {
-      console.log(`[usecjkfont] Element Affects: ${affect}/${seeked}`);
-    }
+    console.log(`[usecjkfont] Element Affects: ${affect}/${seeked}`);
 
     if (seek > maxSeek) {
       maxSeek = seek;
@@ -140,21 +147,21 @@ const defaultsValue = {
 
   }
 
+  make();
 
-  let observer = new MutationObserver(mutations => {
+  let makesecond_ = null;
+  const makesecond = () => {
     if ((maxSeek < limitSeek && new Date().valueOf() < startTime + aliveTime && new Date().valueOf() > makeThrottle + throttleTime) || (startTime + startBurstTime > new Date().valueOf() && new Date().valueOf() > makeThrottle + throttleTime)) {
       make();
       makeThrottle = new Date().valueOf();
       throttleTime += 1000;
+    } else {
+      if (makesecond_) {
+        clearInterval(makesecond_);
+      }
     }
-  });
+  }
 
-  observer.observe(document, {
-    attributes: false,
-    childList: true,
-    characterData: false,
-    subtree: true
-  });
+  makesecond_ = setInterval(makesecond_, 3000);
 
-  make();
 })();
