@@ -29,7 +29,8 @@ const defaultsValue = {
     '.*?highlight.*?', 
     '.*?editor.*?', 
     '.*?vjs.*?', 
-    'fa'
+    'fa',
+    'fas'
   ]
 };
   
@@ -68,7 +69,6 @@ const defaultsValue = {
 
   }
 
-
   let make = () => {
 
     if (lock) return;
@@ -81,10 +81,11 @@ const defaultsValue = {
     document.documentElement.style.setProperty(ff, fff, fffi);
     document.body.style.setProperty(ff, fff, fffi);
 
+
     const seek = (htmlNodes) => {
       seeked++;
       
-      if (seeked > startlimitSeek) {
+      if ((!maxSeek && seeked > startlimitSeek) && (maxSeek && seeked > limitSeek)) {
         return console.error(`[usecjkfont] Seeked over ${seeked}. seeking is stopped`);
       }
 
@@ -135,7 +136,7 @@ const defaultsValue = {
 
     }
 
-    seek(document);
+    seek(document.body);
 
     console.log(`[usecjkfont] Element Affects: ${affect}/${seeked}`);
 
@@ -151,10 +152,15 @@ const defaultsValue = {
 
   let makesecond_ = null;
   const makesecond = () => {
-    if ((maxSeek < limitSeek && new Date().valueOf() < startTime + aliveTime && new Date().valueOf() > makeThrottle + throttleTime) || (startTime + startBurstTime > new Date().valueOf() && new Date().valueOf() > makeThrottle + throttleTime)) {
-      make();
-      makeThrottle = new Date().valueOf();
-      throttleTime += 1000;
+
+    if (new Date().valueOf() < startTime + aliveTime) {
+
+      if ( (maxSeek < limitSeek) && (startTime + startBurstTime > new Date().valueOf() || new Date().valueOf() > makeThrottle + throttleTime)) {
+        make();
+        makeThrottle = new Date().valueOf();
+        throttleTime += 1000;
+      }
+
     } else {
       if (makesecond_) {
         clearInterval(makesecond_);
@@ -162,6 +168,6 @@ const defaultsValue = {
     }
   }
 
-  makesecond_ = setInterval(makesecond_, 3000);
+  makesecond_ = setInterval(makesecond, 3000);
 
 })();

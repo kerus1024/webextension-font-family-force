@@ -29,7 +29,8 @@ const defaultsValue = {
     '.*?highlight.*?', 
     '.*?editor.*?', 
     '.*?vjs.*?', 
-    'fa'
+    'fa',
+    'fas',
   ]
 };
 
