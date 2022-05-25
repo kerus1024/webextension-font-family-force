@@ -94,14 +94,17 @@ const defaultsValue = {
 
           const elem = htmlNodes.childNodes[i];
 
+          // type document-element
           if (elem.nodeType === 1) {
 
             let set = true;
 
+            // ignore dislike tags
             if (ignoreTag.includes(elem.tagName.toLowerCase())) {
               set = false;
             }
 
+            // ignore element specifically including classname
             if (typeof elem.className === 'string') {
               const classNames = elem.className.toLowerCase().split(' ');
               
@@ -122,8 +125,15 @@ const defaultsValue = {
             }
 
             if (set) {
-              elem.style.setProperty(ff, fff, fffi);
-              affect++;
+
+              // shut-off non-text element
+              if (elem.textContent && typeof elem.textContent === 'string') {
+                // shut-off non-text element (PUA)
+                if (!new RegExp(/^[\uE000-\uF8FF]$/).test(elem.textContent)) {
+                  elem.style.setProperty(ff, fff, fffi);
+                  affect++;  
+                }
+              }
 
               if (elem.childNodes) {
                 seek(elem);
