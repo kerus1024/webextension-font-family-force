@@ -28,11 +28,51 @@ const defaultsValue = {
     '.*?textarea.*?', 
     '.*?highlight.*?', 
     '.*?editor.*?', 
-    '.*?vjs.*?', 
+    '.*?vjs.*?',
+    '.*?pdf.*?',
     'fa',
-    'fas',
+    'fas'
   ]
 };
+
+async function storageGet() {
+
+  if (typeof browser !== 'undefined') {
+    // firefox
+    return browser.storage.local.get();
+  } else {
+    // chrome
+    return new Promise((resolve, reject) => {
+
+      chrome.storage.local.get(Object.keys(defaultsValue), (ret) => {
+        resolve(ret);
+      });
+
+    });
+  }
+
+}
+
+async function storageSet(kv) {
+
+  if (typeof browser !== 'undefined') {
+    // firefox
+    return browser.storage.local.set(kv);
+  } else {
+    // chrome 
+
+    return new Promise((resolve, reject) => {
+
+      chrome.storage.local.set(kv, () => {
+        resolve();
+      });
+
+    });
+
+  }
+
+}
+//---------------------------------------------------------------
 
 const savevalues = async() => {
   document.querySelector('#result').innerHTML = 'saving...';
@@ -45,9 +85,16 @@ const savevalues = async() => {
   key.ignoreTag.forEach((x, i) => { if (!x || x == '') { key.ignoreTag.splice(i, 1) }  });
   key.ignoreClassName.forEach((x, i) => { if (!x || x == '') { key.ignoreClassName.splice(i, 1) }  });
 
-  const save = await browser.storage.local.set(key);
+  const save = await storageSet(key);
   
-  document.querySelector('#result').innerHTML = 'OK: you need to refresh page to apply inputed font';
+  await document.fonts.ready;
+  // Not working on firefox for securitry reasons
+  if (document.fonts.check(`12px ${key.font}`)) {
+    document.querySelector('#result').innerHTML = 'OK: you need to refresh page to apply inputed font';
+  } else {
+    document.querySelector('#result').innerHTML = '<span style="color:red">Font Saved: but not found font on your system</span>';
+  }
+
   setTimeout(() => {
     document.querySelector('#result').innerHTML = '';
   }, 2000);
@@ -83,7 +130,7 @@ const getFillDefaultValues = () => {
 
 document.addEventListener('DOMContentLoaded', async() => {
 
-  const getKey = await browser.storage.local.get();
+  const getKey = await storageGet();
 
   if (typeof getKey === 'object' && (getKey.font || getKey.ignoreTag || getKey.ignoreClassName)) {
 

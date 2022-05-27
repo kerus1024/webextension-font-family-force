@@ -28,12 +28,51 @@ const defaultsValue = {
     '.*?textarea.*?', 
     '.*?highlight.*?', 
     '.*?editor.*?', 
-    '.*?vjs.*?', 
+    '.*?vjs.*?',
+    '.*?pdf.*?',
     'fa',
     'fas'
   ]
 };
-  
+
+async function storageGet() {
+
+  if (typeof browser !== 'undefined') {
+    // firefox
+    return browser.storage.local.get();
+  } else {
+    // chrome
+    return new Promise((resolve, reject) => {
+
+      chrome.storage.local.get(Object.keys(defaultsValue), (ret) => {
+        resolve(ret);
+      });
+
+    });
+  }
+
+}
+
+async function storageSet(kv) {
+
+  if (typeof browser !== 'undefined') {
+    // firefox
+    return browser.storage.local.set(kv);
+  } else {
+    // chrome 
+
+    return new Promise((resolve, reject) => {
+
+      chrome.storage.local.set(kv, () => {
+        resolve();
+      });
+
+    });
+
+  }
+
+}
+//---------------------------------------------------------------
 (async() => {
 
   const ff = 'font-family';
@@ -51,7 +90,7 @@ const defaultsValue = {
   let limitSeek = 20000;
   let startlimitSeek = 100000;
 
-  const getKey = await browser.storage.local.get();
+  const getKey = await storageGet();
   
   if (typeof getKey === 'object') {
 
