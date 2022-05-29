@@ -32,6 +32,28 @@ const defaultsValue = {
     '.*?pdf.*?',
     'fa',
     'fas'
+  ],
+  overrideFontList: [
+    'Roboto', // Youtube
+    'Open Sans',
+    'Malgun Gothic',
+    'Nanum Gothic',
+    'NanumGothic',
+    'Lato',
+    'Roboto Mono',
+    '-apple-system',
+    'BlinkMacSystemFont',
+    'Helvetica',
+    'Arial',
+    '굴림',
+    '돋움',
+    '굴림체',
+    '돋움체',
+    '바탕',
+    '바탕체',
+    '궁서',
+    '궁서체',
+    'sans-serif'
   ]
 };
 
@@ -120,6 +142,23 @@ async function storageSet(kv) {
     document.documentElement.style.setProperty(ff, fff, fffi);
     document.body.style.setProperty(ff, fff, fffi);
 
+    // Font Overrides
+    let css = '';
+    defaultsValue.overrideFontList.forEach(fontName => {
+      css += `
+      @font-face {
+        font-family: '${fontName}';
+        src: local('${fff}');
+      }
+      `;
+    });
+
+    let head = document.head || document.getElementsByTagName('head')[0];
+    let style = document.createElement('style');
+    head.appendChild(style);
+
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode(css));
 
     const seek = (htmlNodes) => {
       seeked++;
